@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tereftalicos M&amp;A In-Scope Task</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f4f7;
+      --panel: #ffffff;
+      --panel-soft: #f8f8fa;
+      --ink: #050505;
+      --muted: #595d66;
+      --line: #d9dbe3;
+      --line-strong: #a7abb8;
+      --lseg-blue: #001eff;
+      --lseg-blue-dark: #0011b8;
+      --green: var(--lseg-blue);
+      --green-bright: var(--lseg-blue);
+      --green-soft: #eef1ff;
+      --blue: var(--lseg-blue);
+      --blue-soft: #eef1ff;
+      --amber: #9a5b00;
+      --amber-soft: #fff3d8;
+      --red: #b3261e;
+      --red-soft: #fdecea;
+      --teal: var(--lseg-blue);
+      --teal-soft: #eef1ff;
+      --shadow: 0 18px 48px rgba(0, 30, 255, 0.08);
+      --radius: 8px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      background: var(--bg);
+      padding: 18px;
+    }
+
+    .shell {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+      padding: 28px 36px 26px;
+      color: var(--ink);
+      background:
+        linear-gradient(100deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.96) 48%, rgba(244, 245, 249, 0.92) 100%),
+        url("data:image/svg+xml,%3Csvg width='1180' height='260' viewBox='0 0 1180 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cpath d='M650-20c88 50 153 127 196 230M750-20c90 76 144 160 163 280M870 0c68 48 112 125 132 220' stroke='%23cdd1dc' stroke-width='34' stroke-linecap='round' stroke-opacity='.34'/%3E%3Cpath d='M0 226c182-47 323-43 470-9 183 42 310 49 499-17 90-31 153-45 211-40' stroke='%23001eff' stroke-opacity='.22' stroke-width='2'/%3E%3Cpath d='M0 78c155 36 280 40 430 12 159-30 298-43 442 24 117 54 211 59 308 30' stroke='%23001eff' stroke-opacity='.16' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover;
+      border-bottom: 4px solid var(--lseg-blue);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0;
+      width: 100%;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 7px;
+      border: 1px solid var(--lseg-blue);
+      background: #ffffff;
+      color: var(--lseg-blue);
+      font-size: 19px;
+      font-weight: 760;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 0;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 960px;
+      font-size: 32px;
+      line-height: 1.12;
+      font-weight: 760;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 760px;
+      color: #30323a;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border: 1px solid rgba(0, 30, 255, 0.30);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--lseg-blue);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .main {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 760;
+      text-transform: uppercase;
+      color: #202126;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      min-height: 92px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      border-top: 3px solid var(--lseg-blue);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      margin-top: 8px;
+      font-size: 19px;
+      line-height: 1.16;
+      font-weight: 780;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .kv {
+      min-width: 0;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .kv .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .kv .value {
+      margin-top: 6px;
+      color: var(--ink);
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .relationship {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 104px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .entity-node {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #ffffff;
+      min-width: 0;
+    }
+
+    .entity-node.predecessor {
+      border-color: #f2c4bd;
+      background: var(--red-soft);
+    }
+
+    .entity-node.successor {
+      border-color: #aeb9ff;
+      background: var(--blue-soft);
+    }
+
+    .node-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    .node-name {
+      margin-top: 7px;
+      font-size: 16px;
+      font-weight: 780;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .node-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .bridge {
+      display: grid;
+      justify-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .bridge-line {
+      position: relative;
+      width: 100%;
+      height: 2px;
+      background: var(--line-strong);
+    }
+
+    .bridge-line::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid var(--line-strong);
+      border-right: 2px solid var(--line-strong);
+      transform: rotate(45deg);
+      background: transparent;
+    }
+
+    .workflow {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      color: #ffffff;
+      background: var(--line-strong);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .step.done .step-number {
+      background: var(--green);
+    }
+
+    .step.active {
+      border-color: #9aa8ff;
+      background: var(--blue-soft);
+    }
+
+    .step.active .step-number {
+      background: var(--blue);
+    }
+
+    .step-title {
+      font-weight: 760;
+    }
+
+    .step-text {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .badge.green {
+      color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .badge.blue {
+      color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .badge.amber {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .badge.red {
+      color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .badge.teal {
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .actions-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .action-item {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 9px;
+      align-items: start;
+      min-height: 54px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      color: #27313f;
+    }
+
+    .check-dot {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      padding: 0;
+      border: 2px solid var(--teal);
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .check-dot:focus-visible {
+      outline: 3px solid rgba(0, 30, 255, 0.18);
+      outline-offset: 2px;
+    }
+
+    .action-item.completed {
+      color: var(--muted);
+      background: var(--blue-soft);
+      border-color: #b5beff;
+    }
+
+    .action-item.completed .check-dot {
+      background: var(--teal);
+    }
+
+    .action-item.completed .check-dot::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: solid #ffffff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .action-item.completed .action-label {
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .analysis {
+      margin: 0;
+      color: #283342;
+    }
+
+    .analysis strong {
+      font-weight: 780;
+    }
+
+    @media (max-width: 980px) {
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        padding: 10px;
+      }
+
+      .hero {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .content {
+        padding: 12px;
+      }
+
+      .metric-grid,
+      .kv-grid,
+      .relationship,
+      .actions-list {
+        grid-template-columns: 1fr;
+      }
+
+      .bridge {
+        grid-template-columns: 1fr;
+        padding: 3px 0;
+      }
+
+      .bridge-line {
+        width: 2px;
+        height: 36px;
+      }
+
+      .bridge-line::after {
+        top: auto;
+        right: -4px;
+        bottom: -1px;
+        transform: rotate(135deg);
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <section class="shell" aria-label="M and A task dashboard">
+      <header class="hero">
+        <div class="brand-row">
+          <span class="brand-mark">LSEG</span>
+          <p class="eyebrow">Entity Master workflow / M&amp;A data movement</p>
+        </div>
+        <h1>Tereftalicos Industria E Participacoes Ltda</h1>
+        <p class="subtitle">Private merger case routed for cross-reference validation and in-scope content movement from predecessor PermID to successor PermID.</p>
+        <div class="hero-actions" aria-label="Task status">
+          <span class="status-pill">Current step: In-scope action</span>
+          <span class="status-pill">SLA: T+2 / 48 hrs</span>
+          <span class="status-pill">Event: Merged/Acquired</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="main">
+          <section class="panel" aria-labelledby="summary-title">
+            <div class="panel-head">
+              <h2 class="panel-title" id="summary-title">Task Summary</h2>
+              <span class="panel-note">Source review date: 2026-04-30</span>
+            </div>
+            <div class="panel-body">
+              <div class="metric-grid">
+                <article class="metric">
+                  <div class="metric-label">Predecessor PermID</div>
+                  <div class="metric-value">5040925946</div>
+                  <div class="metric-sub">Inactive, private entity</div>
+                </article>
+                <article class="metric">
+                  <div class="metric-label">Successor PermID</div>
+                  <div class="metric-value">4295859762</div>
+                  <div class="metric-sub">Oxiteno S.A Industria e Comercio</div>
+                </article>
+                <article class="metric">
+                  <div class="metric-label">Routing</div>
+                  <div class="metric-value">Cross-Reference + In-scope</div>
+                  <div class="metric-sub">Data presence and movement checks</div>
+                </article>
+                <article class="metric">
+                  <div class="metric-label">Publish Target</div>
+                  <div class="metric-value">T+2</div>
+                  <div class="metric-sub">Private M&amp;A finalization benchmark</div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="relationship-title">
+            <div class="panel-head">
+              <h2 class="panel-title" id="relationship-title">Predecessor To Successor</h2>
+              <span class="badge amber">Data movement required</span>
+            </div>
+            <div class="panel-body">
+              <div class="relationship">
+                <article class="entity-node predecessor">
+                  <div class="node-kicker">Predecessor</div>
+                  <div class="node-name">Tereftalicos Industria E Participacoes Ltda</div>
+                  <div class="node-meta">
+                    <span>PermID 5040925946</span>
+                    <span>HQ BRA</span>
+                    <span>RA BRA</span>
+                    <span>Public Flag 0</span>
+                  </div>
+                </article>
+                <div class="bridge" aria-hidden="true">
+                  <div>Merge</div>
+                  <div class="bridge-line"></div>
+                  <div>Code 6</div>
+                </div>
+                <article class="entity-node successor">
+                  <div class="node-kicker">Successor</div>
+                  <div class="node-name">Oxiteno S.A Industria e Comercio</div>
+                  <div class="node-meta">
+                    <span>PermID 4295859762</span>
+                    <span>HQ BRA</span>
+                    <span>RA BRA</span>
+                    <span>Parent target</span>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="evidence-title">
+            <div class="panel-head">
+              <h2 class="panel-title" id="evidence-title">Record Evidence</h2>
+              <span class="badge red">Predecessor inactive</span>
+            </div>
+            <div class="panel-body">
+              <div class="kv-grid">
+                <div class="kv">
+                  <div class="label">Party Name</div>
+                  <div class="value">Tereftalicos Industria E Participacoes Ltda</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Organization Category</div>
+                  <div class="value">Merger</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Activity Status</div>
+                  <div class="value">InAct</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Inactive Event</div>
+                  <div class="value">Merged/Acquired</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Inactive Date</div>
+                  <div class="value">2023-03-31</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Event Code</div>
+                  <div class="value">6</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Last Modified</div>
+                  <div class="value">2026-04-30</div>
+                </div>
+                <div class="kv">
+                  <div class="label">IPO Date</div>
+                  <div class="value">Not applicable</div>
+                </div>
+                <div class="kv">
+                  <div class="label">Status Source Review</div>
+                  <div class="value">2026-04-30</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="analysis-title">
+            <div class="panel-head">
+              <h2 class="panel-title" id="analysis-title">Agentic Triage</h2>
+              <span class="badge teal">Recommended route</span>
+            </div>
+            <div class="panel-body">
+              <p class="analysis">
+                <strong>Classify this as private-entity M&amp;A.</strong> The predecessor is inactive with event code 6 and "Merged/Acquired", and the successor PermID is populated. Route first through Cross-Reference to confirm data presence and successor mapping, then assign in-scope content teams to move any linked content from <strong>5040925946</strong> to <strong>4295859762</strong>. Final closure should stay blocked until the data movement evidence, comments, and audit trail are complete.
+              </p>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="workflow-title">
+            <div class="panel-head">
+              <h2 class="panel-title" id="workflow-title">Workflow State</h2>
+              <span class="badge blue" id="statusBadge">In-scope action pending</span>
+            </div>
+            <div class="panel-body">
+              <div class="workflow">
+                <article class="step done">
+                  <div class="step-number">1</div>
+                  <div>
+                    <div class="step-title">Alert intake and validation</div>
+                    <div class="step-text">Workbook row identified as Merger with inactive predecessor and populated successor PermID.</div>
+                  </div>
+                  <span class="badge green">Done</span>
+                </article>
+                <article class="step done">
+                  <div class="step-number">2</div>
+                  <div>
+                    <div class="step-title">Cross-Reference validation</div>
+                    <div class="step-text">Confirm any records linked to the predecessor and validate successor relationship before movement.</div>
+                  </div>
+                  <span class="badge green">Done</span>
+                </article>
+                <article class="step active" id="activeStep">
+                  <div class="step-number">3</div>
+                  <div>
+                    <div class="step-title">In-scope content movement</div>
+                    <div class="step-text">Move linked content from predecessor PermID to successor PermID and add completion evidence.</div>
+                  </div>
+                  <span class="badge blue">Active</span>
+                </article>
+                <article class="step">
+                  <div class="step-number">4</div>
+                  <div>
+                    <div class="step-title">Final EM action and push</div>
+                    <div class="step-text">Entity Content finalizes the relationship, sends downstream notification, captures audit, and closes.</div>
+                  </div>
+                  <span class="badge">Blocked</span>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="checklist-title">
+            <div class="panel-head">
+              <h2 class="panel-title" id="checklist-title">Action Checklist</h2>
+            </div>
+            <div class="panel-body">
+              <ul class="actions-list">
+                <li class="action-item" data-check-item>
+                  <button class="check-dot" type="button" data-check="xref-presence" aria-label="Mark Cross-Reference data presence complete" aria-pressed="false"></button>
+                  <span class="action-label">Review Cross-Reference data presence for predecessor PermID.</span>
+                </li>
+                <li class="action-item" data-check-item>
+                  <button class="check-dot" type="button" data-check="successor-relationship" aria-label="Mark successor relationship complete" aria-pressed="false"></button>
+                  <span class="action-label">Confirm successor relationship to Oxiteno S.A Industria e Comercio.</span>
+                </li>
+                <li class="action-item" data-check-item>
+                  <button class="check-dot" type="button" data-check="content-movement" aria-label="Mark content movement complete" aria-pressed="false"></button>
+                  <span class="action-label">Move all in-scope content from predecessor to successor PermID.</span>
+                </li>
+                <li class="action-item" data-check-item>
+                  <button class="check-dot" type="button" data-check="residual-content" aria-label="Mark residual content check complete" aria-pressed="false"></button>
+                  <span class="action-label">Check that no residual content remains on the predecessor entity.</span>
+                </li>
+                <li class="action-item" data-check-item>
+                  <button class="check-dot" type="button" data-check="completion-evidence" aria-label="Mark completion evidence complete" aria-pressed="false"></button>
+                  <span class="action-label">Add workflow comment with evidence and mark sub-task complete.</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const task = {
+      taskId: "EM-MA-5040925946",
+      category: "Merger",
+      eventName: "Merged/Acquired",
+      eventCode: "6",
+      predecessor: {
+        permId: "5040925946",
+        name: "Tereftalicos Industria E Participacoes Ltda",
+        hqCountry: "BRA",
+        raCountry: "BRA",
+        publicFlag: 0,
+        status: "InAct",
+        inactiveDate: "2023-03-31"
+      },
+      successor: {
+        permId: "4295859762",
+        name: "Oxiteno S.A Industria e Comercio",
+        hqCountry: "BRA",
+        raCountry: "BRA"
+      },
+      owner: "Ownership & Profiles",
+      slaHours: 48,
+      selectedTeams: ["Cross Content Reference", "Ownership & Profiles"],
+      comment: "Private M&A case. Please validate data presence, move any linked content from predecessor PermID 5040925946 to successor PermID 4295859762, then confirm completion for final EM action and push.",
+      sourceReviewDate: "2026-04-30",
+      benchmark: "Private M&A finalization T+2"
+    };
+
+    const storageKey = "tereftalicos-mna-task-state";
+    const statusBadge = document.getElementById("statusBadge");
+    const checkButtons = Array.from(document.querySelectorAll("[data-check]"));
+
+    function completedActions() {
+      return checkButtons
+        .filter((button) => button.getAttribute("aria-pressed") === "true")
+        .map((button) => button.dataset.check);
+    }
+
+    function setChecklistButton(button, completed) {
+      button.setAttribute("aria-pressed", completed ? "true" : "false");
+      button.closest("[data-check-item]").classList.toggle("completed", completed);
+    }
+
+    function updateStatusFromChecklist() {
+      const allComplete = checkButtons.every((button) => button.getAttribute("aria-pressed") === "true");
+      statusBadge.textContent = allComplete ? "In-scope action complete" : "In-scope action pending";
+      statusBadge.className = allComplete ? "badge green" : "badge blue";
+    }
+
+    function getState(action = "draft") {
+      return {
+        type: "entity-task-update",
+        action,
+        status: statusBadge.textContent.trim(),
+        taskId: task.taskId,
+        owner: task.owner,
+        slaHours: task.slaHours,
+        selectedTeams: task.selectedTeams,
+        completedActions: completedActions(),
+        comment: task.comment,
+        predecessorPermId: task.predecessor.permId,
+        successorPermId: task.successor.permId,
+        category: task.category,
+        sourceReviewDate: task.sourceReviewDate,
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    function saveState() {
+      const state = {
+        completedActions: completedActions()
+      };
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+      } catch (error) {
+        // Embedded iframes may block storage; the dashboard still posts updates.
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) return;
+        const state = JSON.parse(raw);
+        if (Array.isArray(state.completedActions)) {
+          checkButtons.forEach((button) => {
+            setChecklistButton(button, state.completedActions.includes(button.dataset.check));
+          });
+        }
+        updateStatusFromChecklist();
+      } catch (error) {
+        try {
+          localStorage.removeItem(storageKey);
+        } catch (removeError) {
+          // Ignore storage cleanup failures in restricted embeds.
+        }
+      }
+    }
+
+    function postHeight() {
+      window.parent.postMessage({
+        type: "entity-task-iframe-height",
+        taskId: task.taskId,
+        height: document.documentElement.scrollHeight
+      }, "*");
+    }
+
+    function postUpdate(action) {
+      const state = getState(action);
+      window.parent.postMessage(state, "*");
+      saveState();
+      postHeight();
+    }
+
+    checkButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const isCompleted = button.getAttribute("aria-pressed") === "true";
+        setChecklistButton(button, !isCompleted);
+        updateStatusFromChecklist();
+        postUpdate("checklist");
+      });
+    });
+
+    loadState();
+    updateStatusFromChecklist();
+    postHeight();
+
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(postHeight).observe(document.getElementById("app"));
+    }
+  </script>
+</body>
+</html>

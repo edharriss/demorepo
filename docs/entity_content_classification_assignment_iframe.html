@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entity Content Classification Assignment</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f4f7;
+      --panel: #ffffff;
+      --panel-soft: #f8f8fa;
+      --ink: #050505;
+      --muted: #595d66;
+      --line: #d9dbe3;
+      --line-strong: #a7abb8;
+      --lseg-blue: #001eff;
+      --blue-soft: #eef1ff;
+      --amber: #9a5b00;
+      --amber-soft: #fff3d8;
+      --red: #b3261e;
+      --red-soft: #fdecea;
+      --green: #0b6b3a;
+      --green-soft: #e8f5ee;
+      --shadow: 0 18px 48px rgba(0, 30, 255, 0.08);
+      --radius: 8px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+      background: var(--bg);
+    }
+
+    .shell {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+      padding: 28px 36px 26px;
+      border-bottom: 4px solid var(--lseg-blue);
+      background:
+        linear-gradient(100deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.96) 48%, rgba(244, 245, 249, 0.92) 100%),
+        url("data:image/svg+xml,%3Csvg width='1180' height='260' viewBox='0 0 1180 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cpath d='M650-20c88 50 153 127 196 230M750-20c90 76 144 160 163 280M870 0c68 48 112 125 132 220' stroke='%23cdd1dc' stroke-width='34' stroke-linecap='round' stroke-opacity='.34'/%3E%3Cpath d='M0 226c182-47 323-43 470-9 183 42 310 49 499-17 90-31 153-45 211-40' stroke='%23001eff' stroke-opacity='.22' stroke-width='2'/%3E%3Cpath d='M0 78c155 36 280 40 430 12 159-30 298-43 442 24 117 54 211 59 308 30' stroke='%23001eff' stroke-opacity='.16' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 7px;
+      border: 1px solid var(--lseg-blue);
+      background: #ffffff;
+      color: var(--lseg-blue);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 19px;
+      font-weight: 760;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: 32px;
+      line-height: 1.12;
+      font-weight: 760;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 820px;
+      color: #30323a;
+      text-align: center;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .status-pill,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      min-height: 30px;
+      padding: 6px 10px;
+      border: 1px solid rgba(0, 30, 255, 0.30);
+      background: #ffffff;
+      color: var(--lseg-blue);
+    }
+
+    .badge {
+      min-height: 24px;
+      padding: 3px 8px;
+    }
+
+    .badge.blue {
+      color: var(--lseg-blue);
+      background: var(--blue-soft);
+    }
+
+    .badge.amber {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .badge.red {
+      color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .badge.green {
+      color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .panel-title {
+      margin: 0;
+      color: #202126;
+      font-size: 13px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .card,
+    .assignment-metric,
+    .signal-card {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .card {
+      min-height: 92px;
+      border-top: 3px solid var(--lseg-blue);
+    }
+
+    .signal-card {
+      min-height: 96px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .value {
+      margin-top: 7px;
+      font-weight: 760;
+      overflow-wrap: anywhere;
+    }
+
+    .subvalue {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .relationship {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 110px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .entity-node {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .entity-node.predecessor {
+      border-color: #f2c4bd;
+      background: var(--red-soft);
+    }
+
+    .entity-node.successor {
+      border-color: #aeb9ff;
+      background: var(--blue-soft);
+    }
+
+    .node-name {
+      margin-top: 7px;
+      font-size: 16px;
+      font-weight: 780;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .node-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .bridge {
+      display: grid;
+      justify-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .bridge-line {
+      position: relative;
+      width: 100%;
+      height: 2px;
+      background: var(--line-strong);
+    }
+
+    .bridge-line::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid var(--line-strong);
+      border-right: 2px solid var(--line-strong);
+      transform: rotate(45deg);
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
+    }
+
+    .source-field {
+      min-width: 0;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 440px);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .rationale {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rationale li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 13px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label,
+    .field .field-label {
+      color: #202126;
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    select,
+    input,
+    textarea,
+    .multi-trigger {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    select,
+    input,
+    .multi-trigger {
+      min-height: 40px;
+      padding: 8px 10px;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      padding: 9px 10px;
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus,
+    .multi-trigger:focus-visible {
+      border-color: var(--lseg-blue);
+      box-shadow: 0 0 0 3px rgba(0, 30, 255, 0.14);
+    }
+
+    .multi-select {
+      position: relative;
+    }
+
+    .multi-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .multi-summary {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .multi-panel {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 6px);
+      right: 0;
+      left: 0;
+      display: none;
+      max-height: 320px;
+      overflow: auto;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: #ffffff;
+      box-shadow: 0 18px 48px rgba(5, 5, 5, 0.16);
+    }
+
+    .multi-select.open .multi-panel {
+      display: block;
+    }
+
+    .team-search {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .team-options {
+      display: grid;
+      gap: 1px;
+      padding: 6px;
+    }
+
+    .team-option {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .team-option:hover {
+      background: var(--panel-soft);
+    }
+
+    .team-option input {
+      width: auto;
+      margin: 2px 0 0;
+      accent-color: var(--lseg-blue);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      min-height: 31px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 1px solid rgba(0, 30, 255, 0.25);
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--lseg-blue);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chip button {
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(0, 30, 255, 0.12);
+      color: var(--lseg-blue);
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .grid-4,
+      .grid-3,
+      .source-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        padding: 10px;
+      }
+
+      .hero {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .content {
+        padding: 12px;
+      }
+
+      .grid-4,
+      .grid-3,
+      .relationship,
+      .source-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bridge {
+        grid-template-columns: 1fr;
+        padding: 3px 0;
+      }
+
+      .bridge-line {
+        width: 2px;
+        height: 36px;
+      }
+
+      .bridge-line::after {
+        top: auto;
+        right: -4px;
+        bottom: -1px;
+        transform: rotate(135deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <section class="shell" aria-label="Entity Content classification assignment">
+      <header class="hero">
+        <div class="brand-row">
+          <span class="brand-mark">LSEG</span>
+          <p class="eyebrow">Entity Content review / spreadsheet-backed classification</p>
+        </div>
+        <h1>Tereftalicos M&amp;A Classification And Team Assignment</h1>
+        <p class="subtitle">Review the full workbook record for Tereftalicos Industria E Participacoes Ltda before confirming classification, assigning subteams, and setting SLA hours.</p>
+        <div class="hero-actions" aria-label="Review status">
+          <span class="status-pill">Workbook row: Sheet1 / PermID 5040925946</span>
+          <span class="status-pill">Recommended classification: M&amp;A</span>
+          <span class="status-pill">Default SLA: 48 hrs</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <section class="panel" aria-labelledby="snapshot-title">
+          <div class="panel-head">
+            <h2 class="panel-title" id="snapshot-title">Workbook Record Snapshot</h2>
+            <span class="badge blue">17 source fields loaded</span>
+          </div>
+          <div class="panel-body">
+            <div class="grid-4">
+              <article class="card">
+                <div class="label">Predecessor</div>
+                <div class="value">Tereftalicos Industria E Participacoes Ltda</div>
+                <div class="subvalue">PermID 5040925946</div>
+              </article>
+              <article class="card">
+                <div class="label">Successor</div>
+                <div class="value">Oxiteno S.A Industria e Comercio</div>
+                <div class="subvalue">PermID 4295859762</div>
+              </article>
+              <article class="card">
+                <div class="label">Workbook Event</div>
+                <div class="value">Merger</div>
+                <div class="subvalue">Inactive event: Merged/Acquired</div>
+              </article>
+              <article class="card">
+                <div class="label">Review Date</div>
+                <div class="value">2026-04-30</div>
+                <div class="subvalue">Last modified 2026-04-30</div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="signals-title">
+          <div class="panel-head">
+            <h2 class="panel-title" id="signals-title">Classification Signals From Spreadsheet</h2>
+            <span class="badge green">M&amp;A recommended</span>
+          </div>
+          <div class="panel-body">
+            <div class="grid-4">
+              <article class="signal-card">
+                <div class="label">Organization Category</div>
+                <div class="value">Merger</div>
+                <div class="subvalue">Maps directly to M&amp;A workflow.</div>
+              </article>
+              <article class="signal-card">
+                <div class="label">Public Flag</div>
+                <div class="value">0</div>
+                <div class="subvalue">Private-entity treatment, not public M&amp;A.</div>
+              </article>
+              <article class="signal-card">
+                <div class="label">Activity / Inactive Event</div>
+                <div class="value">InAct / Merged/Acquired</div>
+                <div class="subvalue">Event code 6, inactive date 2023-03-31.</div>
+              </article>
+              <article class="signal-card">
+                <div class="label">Successor Populated</div>
+                <div class="value">4295859762</div>
+                <div class="subvalue">Successor/parent entity present for movement.</div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="relationship-title">
+          <div class="panel-head">
+            <h2 class="panel-title" id="relationship-title">Predecessor To Successor Relationship</h2>
+            <span class="badge amber">Data movement required</span>
+          </div>
+          <div class="panel-body">
+            <div class="relationship">
+              <article class="entity-node predecessor">
+                <div class="label">Predecessor Entity</div>
+                <div class="node-name">Tereftalicos Industria E Participacoes Ltda</div>
+                <div class="node-meta">
+                  <span>PermID 5040925946</span>
+                  <span>HQ BRA</span>
+                  <span>RA BRA</span>
+                  <span>Status InAct</span>
+                  <span>PublicFlag 0</span>
+                </div>
+              </article>
+              <div class="bridge" aria-hidden="true">
+                <div>Merge</div>
+                <div class="bridge-line"></div>
+                <div>Code 6</div>
+              </div>
+              <article class="entity-node successor">
+                <div class="label">Successor Entity</div>
+                <div class="node-name">Oxiteno S.A Industria e Comercio</div>
+                <div class="node-meta">
+                  <span>PermID 4295859762</span>
+                  <span>HQ BRA</span>
+                  <span>RA BRA</span>
+                  <span>Successor/parent target</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="source-title">
+          <div class="panel-head">
+            <h2 class="panel-title" id="source-title">Complete Spreadsheet Row</h2>
+            <span class="badge blue">Raw evidence</span>
+          </div>
+          <div class="panel-body">
+            <div class="source-grid">
+              <div class="source-field"><div class="label">PermId</div><div class="value">5040925946</div></div>
+              <div class="source-field"><div class="label">LastModifiedDate</div><div class="value">2026-04-30 00:00:00</div></div>
+              <div class="source-field"><div class="label">PartyName</div><div class="value">Tereftalicos Industria E Participacoes Ltda</div></div>
+              <div class="source-field"><div class="label">HQ_Country</div><div class="value">BRA</div></div>
+              <div class="source-field"><div class="label">RA_Country</div><div class="value">BRA</div></div>
+              <div class="source-field"><div class="label">PublicFlag</div><div class="value">0</div></div>
+              <div class="source-field"><div class="label">IpoDate</div><div class="value">1753-01-01 00:00:00.000000</div><div class="subvalue">System placeholder, not an IPO signal.</div></div>
+              <div class="source-field"><div class="label">OrganizationActivityStatusCode</div><div class="value">InAct</div></div>
+              <div class="source-field"><div class="label">OrganizationInactiveDate</div><div class="value">2023-03-31 00:00:00</div></div>
+              <div class="source-field"><div class="label">OrganizationInactiveEventCode</div><div class="value">6</div></div>
+              <div class="source-field"><div class="label">OrganizationStatusSourceReviewDate</div><div class="value">2026-04-30 00:00:00</div></div>
+              <div class="source-field"><div class="label">OrganizationInactiveEventLongName</div><div class="value">Merged/Acquired</div></div>
+              <div class="source-field"><div class="label">OrganizationSuccessorPartyPermId</div><div class="value">4295859762</div></div>
+              <div class="source-field"><div class="label">SuccessorPartyName</div><div class="value">Oxiteno S.A Industria e Comercio</div></div>
+              <div class="source-field"><div class="label">Successor_HQ_Country</div><div class="value">BRA</div></div>
+              <div class="source-field"><div class="label">Successor_RA_Country</div><div class="value">BRA</div></div>
+              <div class="source-field"><div class="label">OrganizationCategory</div><div class="value">Merger</div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="assignment-title">
+          <div class="panel-head">
+            <h2 class="panel-title" id="assignment-title">Entity Content Review And Assignment</h2>
+            <span class="badge amber" id="assignmentStatus">Assignment draft</span>
+          </div>
+          <div class="panel-body">
+            <div class="review-grid">
+              <ul class="rationale" aria-label="Entity Content assignment rationale">
+                <li>
+                  <div class="label">Recommended decision</div>
+                  <div class="value">Classify as M&amp;A because the row is a Merger with Merged/Acquired inactive event and populated successor PermID.</div>
+                </li>
+                <li>
+                  <div class="label">Cross-Reference dependency</div>
+                  <div class="value">Validate data presence and successor relationship before assigning in-scope data movement tasks.</div>
+                </li>
+                <li>
+                  <div class="label">SLA benchmark</div>
+                  <div class="value">Private M&amp;A finalization is T+2, so the default SLA is 48 hours unless Entity Content overrides it.</div>
+                </li>
+              </ul>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="classification">Classification decision</label>
+                  <select id="classification">
+                    <option selected>M&amp;A</option>
+                    <option>IPO</option>
+                    <option>Delisting</option>
+                    <option>Duplicate</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <span class="field-label">Assign subteams</span>
+                  <div class="multi-select" id="teamSelect">
+                    <button class="multi-trigger" type="button" id="teamTrigger" aria-expanded="false" aria-controls="teamPanel">
+                      <span class="multi-summary" id="teamSummary">Select subteams</span>
+                      <span aria-hidden="true">v</span>
+                    </button>
+                    <div class="multi-panel" id="teamPanel">
+                      <div class="team-search">
+                        <input id="teamSearch" type="search" placeholder="Search subteams">
+                      </div>
+                      <div class="team-options" id="teamOptions"></div>
+                    </div>
+                  </div>
+                  <div class="chips" id="selectedChips" aria-label="Selected subteams"></div>
+                </div>
+
+                <div class="field">
+                  <label for="slaHours">SLA time to complete work (hours)</label>
+                  <input id="slaHours" type="number" min="1" max="240" step="1" value="48">
+                </div>
+
+                <div class="field">
+                  <label for="assignmentNote">Assignment note</label>
+                  <textarea id="assignmentNote">Spreadsheet-backed private M&amp;A case. Confirm data presence and move impacted content from predecessor PermID 5040925946 to successor PermID 4295859762 within the selected SLA.</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="summary-title-2">
+          <div class="panel-head">
+            <h2 class="panel-title" id="summary-title-2">Assignment Summary</h2>
+            <span class="badge blue" id="teamCount">0 subteams selected</span>
+          </div>
+          <div class="panel-body">
+            <div class="grid-3">
+              <article class="assignment-metric">
+                <div class="label">Classification</div>
+                <div class="value" id="classificationPreview">M&amp;A</div>
+              </article>
+              <article class="assignment-metric">
+                <div class="label">SLA Hours</div>
+                <div class="value" id="slaPreview">48</div>
+              </article>
+              <article class="assignment-metric">
+                <div class="label">Assignment Route</div>
+                <div class="value">Cross-Reference then parallel subteams</div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      function startWhenReady() {
+        if (!document.getElementById("teamOptions")) {
+          window.setTimeout(startWhenReady, 50);
+          return;
+        }
+        if (window.__entityContentAssignmentReady) return;
+        window.__entityContentAssignmentReady = true;
+        initEntityContentAssignment();
+      }
+
+      function initEntityContentAssignment() {
+        const teamNames = [
+          "ETI and Deals",
+          "Cross Content Reference",
+          "Central Reference",
+          "O&D",
+          "OA Textual Data",
+          "Filings",
+          "ESG",
+          "Research",
+          "Ratings",
+          "Events and Transcripts",
+          "World Check",
+          "Ownership & Profiles",
+          "Fixed Income",
+          "CDMT",
+          "FX",
+          "News Discovery Optimization",
+          "ICW",
+          "CORAX",
+          "Private Company",
+          "DataStream",
+          "Quant/LQA",
+          "CMD",
+          "Lipper",
+          "Portfolio Analytics",
+          "CDM",
+          "Issuer File",
+          "Estimates",
+          "CDS"
+        ];
+
+        const task = {
+          taskId: "EM-CLASSIFY-5040925946",
+          sourceSheet: "Input File Workflow Orchestration.xlsx / Sheet1",
+          predecessorPermId: "5040925946",
+          predecessorName: "Tereftalicos Industria E Participacoes Ltda",
+          successorPermId: "4295859762",
+          successorName: "Oxiteno S.A Industria e Comercio",
+          organizationCategory: "Merger",
+          inactiveEventCode: "6",
+          inactiveEventLongName: "Merged/Acquired",
+          publicFlag: "0",
+          recommendedClassification: "M&A"
+        };
+
+        const storageKey = "entity-content-classification-assignment-v2";
+        const teamSelect = document.getElementById("teamSelect");
+        const teamTrigger = document.getElementById("teamTrigger");
+        const teamOptions = document.getElementById("teamOptions");
+        const teamSearch = document.getElementById("teamSearch");
+        const teamSummary = document.getElementById("teamSummary");
+        const selectedChips = document.getElementById("selectedChips");
+        const teamCount = document.getElementById("teamCount");
+        const classification = document.getElementById("classification");
+        const classificationPreview = document.getElementById("classificationPreview");
+        const slaHours = document.getElementById("slaHours");
+        const slaPreview = document.getElementById("slaPreview");
+        const assignmentNote = document.getElementById("assignmentNote");
+        const assignmentStatus = document.getElementById("assignmentStatus");
+
+        function selectedTeams() {
+          return Array.from(teamOptions.querySelectorAll("input:checked")).map(function (input) {
+            return input.value;
+          });
+        }
+
+        function escapeHtml(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function renderTeams(filter) {
+          const selected = new Set(selectedTeams());
+          const search = String(filter || "").trim().toLowerCase();
+          const visibleTeams = teamNames.filter(function (team) {
+            return team.toLowerCase().indexOf(search) !== -1;
+          });
+          teamOptions.innerHTML = visibleTeams.map(function (team) {
+            const safeTeam = escapeHtml(team);
+            const checked = selected.has(team) ? " checked" : "";
+            return '<label class="team-option"><input type="checkbox" value="' + safeTeam + '"' + checked + '><span>' + safeTeam + '</span></label>';
+          }).join("");
+        }
+
+        function renderSummary() {
+          const teams = selectedTeams();
+          teamSummary.textContent = teams.length ? teams.length + " subteam" + (teams.length === 1 ? "" : "s") + " selected" : "Select subteams";
+          teamCount.textContent = teams.length + " subteam" + (teams.length === 1 ? "" : "s") + " selected";
+          classificationPreview.textContent = classification.value;
+          slaPreview.textContent = slaHours.value || "0";
+          selectedChips.innerHTML = teams.map(function (team) {
+            const safeTeam = escapeHtml(team);
+            return '<span class="chip">' + safeTeam + '<button type="button" data-remove-team="' + safeTeam + '" aria-label="Remove ' + safeTeam + '">x</button></span>';
+          }).join("");
+          assignmentStatus.textContent = teams.length && Number(slaHours.value) > 0 ? "Ready to assign" : "Assignment draft";
+          assignmentStatus.className = teams.length && Number(slaHours.value) > 0 ? "badge blue" : "badge amber";
+          saveState();
+          postHeight();
+        }
+
+        function getState(action) {
+          return {
+            type: "entity-content-classification-assignment",
+            action: action || "draft",
+            taskId: task.taskId,
+            sourceSheet: task.sourceSheet,
+            predecessorPermId: task.predecessorPermId,
+            predecessorName: task.predecessorName,
+            successorPermId: task.successorPermId,
+            successorName: task.successorName,
+            organizationCategory: task.organizationCategory,
+            inactiveEventCode: task.inactiveEventCode,
+            inactiveEventLongName: task.inactiveEventLongName,
+            publicFlag: task.publicFlag,
+            recommendedClassification: task.recommendedClassification,
+            classificationDecision: classification.value,
+            assignedSubteams: selectedTeams(),
+            slaHours: Number(slaHours.value || 0),
+            assignmentNote: assignmentNote.value.trim(),
+            updatedAt: new Date().toISOString()
+          };
+        }
+
+        function saveState() {
+          try {
+            window.localStorage.setItem(storageKey, JSON.stringify({
+              classification: classification.value,
+              selectedTeams: selectedTeams(),
+              slaHours: slaHours.value,
+              assignmentNote: assignmentNote.value
+            }));
+          } catch (error) {}
+        }
+
+        function loadState() {
+          try {
+            const raw = window.localStorage.getItem(storageKey);
+            if (!raw) return;
+            const state = JSON.parse(raw);
+            if (state.classification) classification.value = state.classification;
+            if (state.slaHours) slaHours.value = state.slaHours;
+            if (state.assignmentNote) assignmentNote.value = state.assignmentNote;
+            const selected = new Set(Array.isArray(state.selectedTeams) ? state.selectedTeams : []);
+            teamOptions.querySelectorAll("input").forEach(function (input) {
+              input.checked = selected.has(input.value);
+            });
+          } catch (error) {
+            try {
+              window.localStorage.removeItem(storageKey);
+            } catch (removeError) {}
+          }
+        }
+
+        function postHeight() {
+          window.parent.postMessage({
+            type: "entity-content-assignment-height",
+            taskId: task.taskId,
+            height: document.documentElement.scrollHeight
+          }, "*");
+        }
+
+        function postUpdate(action) {
+          window.parent.postMessage(getState(action), "*");
+          saveState();
+          postHeight();
+        }
+
+        renderTeams("");
+        loadState();
+        renderSummary();
+
+        teamTrigger.addEventListener("click", function () {
+          const isOpen = teamSelect.classList.toggle("open");
+          teamTrigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          if (isOpen) teamSearch.focus();
+          postHeight();
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!teamSelect.contains(event.target)) {
+            teamSelect.classList.remove("open");
+            teamTrigger.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        teamSearch.addEventListener("input", function () {
+          const selected = new Set(selectedTeams());
+          renderTeams(teamSearch.value);
+          teamOptions.querySelectorAll("input").forEach(function (input) {
+            input.checked = selected.has(input.value);
+          });
+          renderSummary();
+        });
+
+        teamOptions.addEventListener("change", function () {
+          renderSummary();
+          postUpdate("draft");
+        });
+
+        selectedChips.addEventListener("click", function (event) {
+          const button = event.target.closest("[data-remove-team]");
+          if (!button) return;
+          const team = button.dataset.removeTeam;
+          teamOptions.querySelectorAll("input").forEach(function (input) {
+            if (input.value === team) input.checked = false;
+          });
+          renderSummary();
+          postUpdate("draft");
+        });
+
+        [classification, slaHours, assignmentNote].forEach(function (control) {
+          control.addEventListener("input", function () {
+            renderSummary();
+            postUpdate("draft");
+          });
+          control.addEventListener("change", function () {
+            renderSummary();
+            postUpdate("draft");
+          });
+        });
+
+        if ("ResizeObserver" in window) {
+          new ResizeObserver(postHeight).observe(document.getElementById("app"));
+        }
+      }
+
+      startWhenReady();
+    })();
+  </script>
+</body>
+</html>

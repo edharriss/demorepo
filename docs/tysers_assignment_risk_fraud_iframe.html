@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tysers Marine Claims - Assignment of Risk/Fraud Review</title>
+  <style>
+    :root {
+      --uipath-orange: #fa4616;
+      --navy: #0b2341;
+      --blue: #124f91;
+      --sky: #eaf4ff;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --border: #d9e2ec;
+      --muted: #65758b;
+      --text: #1d2733;
+      --success: #12805c;
+      --warning: #b7791f;
+      --danger: #c53030;
+      --purple: #6b46c1;
+      --amber-bg: #fff8e6;
+      --danger-bg: #fff1f1;
+      --success-bg: #eafaf3;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: transparent;
+      color: var(--text);
+    }
+
+    body { padding: 0; }
+
+    .iframe-shell {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+      background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 16px 38px rgba(11,35,65,0.10);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtext {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+      max-width: 760px;
+      font-size: 14px;
+    }
+
+    .case-ref {
+      min-width: 280px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .case-ref strong {
+      display: block;
+      color: var(--navy);
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    .pill {
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      border: 1px solid var(--border);
+      background: #f7fafc;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .pill.warning { background: var(--amber-bg); color: var(--warning); border-color: #f4d790; }
+    .pill.danger { background: var(--danger-bg); color: var(--danger); border-color: #fac5c5; }
+    .pill.success { background: var(--success-bg); color: var(--success); border-color: #b8ead4; }
+    .pill.purple { background: #f3efff; color: var(--purple); border-color: #d8c9ff; }
+
+    .score-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 96px;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+
+    .metric .value {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+
+    .metric .hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(11,35,65,0.06);
+    }
+
+    .card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: #fbfdff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 15px;
+    }
+
+    .card-header span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .card-body { padding: 16px; }
+
+    .risk-list { display: grid; gap: 10px; }
+
+    .risk-item {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #ffffff;
+    }
+
+    .risk-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      background: var(--sky);
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .risk-item.warning .risk-icon { background: var(--amber-bg); color: var(--warning); }
+    .risk-item.danger .risk-icon { background: var(--danger-bg); color: var(--danger); }
+    .risk-item.success .risk-icon { background: var(--success-bg); color: var(--success); }
+    .risk-item.purple .risk-icon { background: #f3efff; color: var(--purple); }
+
+    .risk-title {
+      font-weight: 820;
+      color: var(--navy);
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .risk-text {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .risk-tag {
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 850;
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .risk-tag.low { color: var(--success); background: var(--success-bg); border-color: #b8ead4; }
+    .risk-tag.medium { color: var(--warning); background: var(--amber-bg); border-color: #f4d790; }
+    .risk-tag.high { color: var(--danger); background: var(--danger-bg); border-color: #fac5c5; }
+    .risk-tag.review { color: var(--purple); background: #f3efff; border-color: #d8c9ff; }
+
+    .section-title {
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 850;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .field {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px;
+      background: #fbfdff;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 5px;
+    }
+
+    .field .value {
+      color: var(--navy);
+      font-weight: 760;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .assignment-box {
+      display: grid;
+      gap: 12px;
+    }
+
+    .assignment-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      background: #fbfdff;
+    }
+
+    .assignment-card.recommended {
+      border-color: #f4d790;
+      background: #fffaf0;
+    }
+
+    .assignment-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .assignment-header strong {
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .assignment-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 11px;
+      position: relative;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #eef6ff;
+      border: 1px solid #c7dcf7;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .timeline-text strong {
+      display: block;
+      color: var(--navy);
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .timeline-text span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .decision-panel {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .decision {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      background: white;
+      min-height: 92px;
+    }
+
+    .decision strong {
+      display: block;
+      color: var(--navy);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .decision p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 980px) {
+      .topbar, .layout { grid-template-columns: 1fr; display: grid; }
+      .case-ref { min-width: 0; }
+      .score-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .decision-panel { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .iframe-shell { padding: 12px; border-radius: 0; }
+      .score-strip, .field-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 19px; }
+      .risk-item { grid-template-columns: 30px 1fr; }
+      .risk-tag { grid-column: 2; justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <section class="iframe-shell" aria-label="Assignment of Risk and Fraud Review iframe">
+    <div class="topbar">
+      <div>
+        <div class="eyebrow">Triage & Routing · Human-in-the-loop assignment</div>
+        <h1>Assignment for Risk / Fraud Review</h1>
+        <p class="subtext">Review agent-detected risk signals for the marine cargo FNOL and confirm whether the case should remain with the standard Marine Claims team or be assigned to a specialist reviewer.</p>
+      </div>
+      <aside class="case-ref">
+        <div class="eyebrow">Claim Case</div>
+        <strong>MC-2025-001248</strong>
+        <div class="pill-row">
+          <span class="pill warning">Medium Risk</span>
+          <span class="pill purple">Marine Cargo</span>
+          <span class="pill danger">Sanctions Check Required</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="score-strip">
+      <div class="metric">
+        <div class="label">Risk Score</div>
+        <div class="value">62 / 100</div>
+        <div class="hint">Elevated due to geography, cargo value and temperature excursion.</div>
+      </div>
+      <div class="metric">
+        <div class="label">Fraud Score</div>
+        <div class="value">28 / 100</div>
+        <div class="hint">No obvious fraud pattern found in submitted evidence.</div>
+      </div>
+      <div class="metric">
+        <div class="label">Recommended Queue</div>
+        <div class="value" style="font-size:19px;">Marine Risk Review</div>
+        <div class="hint">Specialist review before market notification.</div>
+      </div>
+      <div class="metric">
+        <div class="label">SLA Impact</div>
+        <div class="value" style="font-size:19px;">+4 hrs</div>
+        <div class="hint">Recommended review deadline: today 16:30.</div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Detected Risk & Fraud Signals</h2>
+          <span>Agent confidence: 87%</span>
+        </div>
+        <div class="card-body">
+          <div class="risk-list">
+            <div class="risk-item warning">
+              <div class="risk-icon">!</div>
+              <div>
+                <div class="risk-title">Geography / sanctions screening required</div>
+                <div class="risk-text">Shipment originated from Visakhapatnam, India and discharged at Rotterdam. Counterparties, vessel, port route and payment recipients should be screened before payment or market settlement.</div>
+              </div>
+              <span class="risk-tag medium">Medium</span>
+            </div>
+
+            <div class="risk-item warning">
+              <div class="risk-icon">£</div>
+              <div>
+                <div class="risk-title">High declared cargo value</div>
+                <div class="risk-text">Commercial invoice indicates USD 185,000 shipment value. Claimed loss estimate is USD 74,000, around 40% of invoice value.</div>
+              </div>
+              <span class="risk-tag medium">Medium</span>
+            </div>
+
+            <div class="risk-item success">
+              <div class="risk-icon">✓</div>
+              <div>
+                <div class="risk-title">Evidence package appears consistent</div>
+                <div class="risk-text">FNOL, surveyor report, invoice, bill of lading, salvage estimate and photo evidence are aligned on commodity, container, vessel, voyage and loss date.</div>
+              </div>
+              <span class="risk-tag low">Low</span>
+            </div>
+
+            <div class="risk-item purple">
+              <div class="risk-icon">?</div>
+              <div>
+                <div class="risk-title">Temperature data gap</div>
+                <div class="risk-text">Data logger supports a temperature excursion but full temperature graph is not yet present in the evidence package. Recommend requesting the complete logger export before final decision.</div>
+              </div>
+              <span class="risk-tag review">Review</span>
+            </div>
+
+            <div class="risk-item success">
+              <div class="risk-icon">ID</div>
+              <div>
+                <div class="risk-title">No duplicate claim detected</div>
+                <div class="risk-text">No matching claim found for policy TY25MAR123456, container SEGU 580123-0, vessel MV Ocean Endeavour or voyage OE2504 in current case data.</div>
+              </div>
+              <span class="risk-tag low">Low</span>
+            </div>
+          </div>
+
+          <div class="decision-panel">
+            <div class="decision">
+              <strong>Recommended decision</strong>
+              <p>Assign to Marine Risk Review before proceeding to market messaging.</p>
+            </div>
+            <div class="decision">
+              <strong>Reason code</strong>
+              <p>Medium risk: sanctions check, high value cargo, incomplete temperature graph.</p>
+            </div>
+            <div class="decision">
+              <strong>Next stage after review</strong>
+              <p>Return to Triage & Routing or continue to Policy & Claim Validation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Assignment Summary</h2>
+          <span>Pre-populated by agent</span>
+        </div>
+        <div class="card-body assignment-box">
+          <div>
+            <p class="section-title">Case details</p>
+            <div class="field-grid">
+              <div class="field"><label>Insured</label><div class="value">Oceanic Seafoods Ltd.</div></div>
+              <div class="field"><label>Broker</label><div class="value">Tysers Marine Claims</div></div>
+              <div class="field"><label>Policy No.</label><div class="value">TY25MAR123456</div></div>
+              <div class="field"><label>Loss Type</label><div class="value">Reefer temperature excursion</div></div>
+              <div class="field"><label>Commodity</label><div class="value">Frozen prawns</div></div>
+              <div class="field"><label>Estimated Loss</label><div class="value">USD 74,000</div></div>
+            </div>
+          </div>
+
+          <div>
+            <p class="section-title">Suggested assignment</p>
+            <div class="assignment-card recommended">
+              <div class="assignment-header">
+                <strong>Marine Risk Review Queue</strong>
+                <span class="pill warning">Recommended</span>
+              </div>
+              <p>Use when risk is elevated but fraud indicators are not strong enough for direct Fraud Team escalation.</p>
+            </div>
+            <div class="assignment-card">
+              <div class="assignment-header">
+                <strong>Marine Claims Handler</strong>
+                <span class="pill success">Alternative</span>
+              </div>
+              <p>Appropriate if sanctions and missing temperature data are cleared at triage.</p>
+            </div>
+            <div class="assignment-card">
+              <div class="assignment-header">
+                <strong>Fraud / Financial Crime Team</strong>
+                <span class="pill danger">Escalate only if hit</span>
+              </div>
+              <p>Use only if screening generates a match or further evidence creates a fraud concern.</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="section-title">Proposed audit trail</p>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="dot">1</div>
+                <div class="timeline-text"><strong>Agent risk assessment completed</strong><span>Risk and fraud scores generated from FNOL and supporting documents.</span></div>
+              </div>
+              <div class="timeline-item">
+                <div class="dot">2</div>
+                <div class="timeline-text"><strong>Human review required</strong><span>Claims handler confirms assignment route and reason code.</span></div>
+              </div>
+              <div class="timeline-item">
+                <div class="dot">3</div>
+                <div class="timeline-text"><strong>Case routed</strong><span>Case is assigned to selected queue and SLA target is updated.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <p class="footnote">This embedded view is designed for the UiPath Case Management task “Assignment for Risk/Fraud Review”. It does not submit changes by itself; it is intended to sit inside a human-in-the-loop review screen or Process App detail panel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
